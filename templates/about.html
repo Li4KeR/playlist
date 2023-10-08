@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}
+About
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">{{ name }}</h1>
+        <div class="row">
+            <div class="col-5">
+                <div class="block_status">
+                    <p style="font-weight: bold;">Статус:</p>
+                    {% if ping == True%}
+                    <p class="status_ok">Доступен</p>
+                    {% else %}
+                    <p class="status_not_ok">Не доступен</p>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <form method="POST" id="form_{{ nuke.id }}" class="video_form form-example" data-method="serializeArray">
+              {% for video in all_videos %}
+
+                {% if video in nuke.videos %}
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{ video[0] }}" name="check_box" id="{{ nuke.id }}_{{ video[0] }}" checked>
+                    <label class="form-check-label" for="{{ nuke.id }}_{{ video[0] }}">
+                      {{ video[1] }}
+                    </label>
+                  </div>
+
+                {% else %}
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="{{ video[0] }}" name="check_box" id="{{ nuke.id }}_{{ video[0] }}">
+                  <label class="form-check-label" for="{{ nuke.id }}_{{ video[0] }}" style="color: red;">
+                      {{ video[1] }}
+                  </label>
+                </div>
+
+                {% endif %}
+              {% endfor %}
+
+              <br>
+              <div class="form-example">
+                <input type="hidden" name="index" value="{{ nuke.id }}">
+                      <a class="w-100 btn btn-lg btn-dark btn-primary" onclick="send_form('form_{{ nuke.id }}')">Обновить</a>
+  <!--                    <input type="submit" id="btn-send-test" class="w-100 btn btn-lg btn-dark btn-primary" value="Обновить">-->
+                <div id="msg">{{ test_dict }}</div>
+              </div>
+            </form>
+
+
+            <div class="col-5">
+                <div class="form_about">
+
+                <form action="/about/{{ id }}" method="POST">
+                    <input type="hidden" name="index" value="PlayVideo_{{ id }}">
+                    <input type="submit" class="btn btn-dark" value="Play">
+                </form>
+
+                <form action="/about/{{ id }}" method="POST">
+                    <input type="hidden" name="index" value="PauseVideo_{{ id }}">
+                    <input type="submit" class="btn btn-dark" value="Pause">
+                </form>
+
+                <form action="/about/{{ id }}" method="POST">
+                    <input type="hidden" name="index" value="Restart_{{ id }}">
+                    <input type="submit" class="btn btn-dark" value="Restart">
+                </form>
+
+                <form action="/about/{{ id }}" method="POST">
+                    <input type="hidden" name="index" value="CheckPlaylist_{{ id }}">
+                    <input type="submit" class="btn btn-dark" value="Check Playlist">
+                </form>
+
+                <form action="/about/{{ id }}" method="POST">
+                    <input type="hidden" name="index" value="Ping_{{ id }}">
+                    <input type="submit" class="btn btn-dark" value="Ping">
+                </form>
+            </div>
+            <br>
+            <a class="btn btn-dark" href="/edit/{{ id }}">Редактировать видео</a>
+        </div>
+<!--    <div class="list_all_video">-->
+<!--        <ul>-->
+<!--        {% for video in videos %}-->
+<!--            <li>{{ video }}</li>-->
+<!--        {% endfor %}-->
+<!--        </ul>-->
+<!--    </div>-->
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+Видео
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 style="padding-bottom: 10px;">Видео</h1>
+    {% for video in all_video %}
+            <div class="block-delete-video row">
+                    <p class="col-8">{{ video[1] }}</p>
+                    <form class="col-2" method="post">
+                        <input hidden ="text" name="send" value="rename_____{{ video[0] }}___{{ video[1] }}___{{ video[2] }}">
+    <!--                    <input class="bg-dark btn-video" style="color: white;" type="submit" value="Переименовать"></input>-->
+                        <a onclick="send_edit_video('{{ video[0] }}')" class="btn btn-dark btn-sm btn-video" >Переименовать</a>
+                    </form>
+
+                    <form class="col-2" method="post">
+                        <input hidden type="text" name="send" value="delete_____{{ video[2] }}_____{{ video[0] }}">
+                        <input class="btn btn-dark btn-sm btn-video" style="color: white; background-color: #cb121b;" type="submit" value="Удалить"></input>
+                    </form>
+
+                <form method="post" id="rename_video_{{ video[0] }}" class="display-none" style="padding-top: 10px;">
+                    <div class="input-group mb-3">
+                        <input hidden type="text" name="send" value="rename_____{{ video[0] }}">
+                      <input type="text" class="form-control" name="name" placeholder="Новое имя для видео" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-dark btn-sm btn-video" type="submit">Сохранить</button>
+                      </div>
+                    </div>
+                </form>
+
+                </div>
+    {% endfor %}
+<br>
+
+    <h1 style="padding-bottom: 10px;">Добавить видео</h1>
+    <div id="form-download-video">
+        <form id="form-download-new-video" method="post" enctype="multipart/form-data">
+            <input type="text" name="name" id="name" placeholder="Имя" class="form-control"><br>
+            <input type="file" name="file">
+            <br>
+                {{ status_download_video }}
+            <br>
+            <input type="submit" class="btn btn-success" id="button-download-new-video" name="send" value="Отправить"></input>
+            <br><br>
+        </form>
+    </div>
+    <div id="video-download" class="display-none">
+        <p>Видео загружается</p>
+    </div>
+
+
+
+        {% if status == True%}
+        <div class="block_status">
+            <p>Синхронизация прошла успешно</p>
+        </div>
+        {% else %}
+        <form method="post">
+            <input type="submit" class="btn btn-dark" name="send" value="Синхронизировать видео">
+        </form>
+        {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+Телевизоры
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Телевизоры</h1>
+    <p>{{ feedback }}</p>
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-8">
+                    <p>Имя</p>
+                </div>
+                <div class="col-4">
+                    <p>IP-адрес</p>
+                </div>
+            </div>
+        </div>
+
+<!--        <div class="col-6">-->
+<!--            <button>Синхронизировать</button>-->
+<!--            <button>Редактировать</button>-->
+<!--            <button>Удалить</button>-->
+<!--        </div>-->
+
+    </div>
+{% for nuke in all_nukes %}
+        <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-8">
+                    <p>{{ (all_nukes.get(nuke)).get('name') }}</p>
+                </div>
+                <div class="col-4">
+                    <p>{{ (all_nukes.get(nuke)).get('ip_nuke') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="row">
+                <div class="col-4">
+                    <form method="post" id="SyncNukeForm_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                        <th>
+                            <input hidden ="text" name="name" value="sync_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                            <a id="btnNukeSync_{{ (all_nukes.get(nuke)).get('id_nuke') }}" class="btn btn-sm bg-dark" style="color: white;" onclick="sync_video_nuke('{{ (all_nukes.get(nuke)).get('id_nuke') }}')" value="Синхронизировать">Синхронизировать</a>
+                        </th>
+                    </form>
+                </div>
+
+                <div class="col-3">
+                    <form method="post">
+                        <th>
+                            <input hidden ="text" name="name" value="edit_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+<!--                                <input class="bg-dark" style="color: white;" type="submit" value="Редактировать"></input>-->
+                            <a id="btnNukeEdit_{{ (all_nukes.get(nuke)).get('id_nuke') }}" class="btn btn-sm bg-dark" style="color: white;" onclick="send_edit_nuke('{{ (all_nukes.get(nuke)).get('id_nuke') }}')" value="Редактировать">Редактировать</a>
+                        </th>
+                    </form>
+                </div>
+
+                <div class="col-2">
+                    <form method="post" id="CheckNukeForm_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                        <th>
+                            <input hidden ="text" name="name" value="check_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                            <a id="btnNukeCheck_{{ (all_nukes.get(nuke)).get('id_nuke') }}" class="btn btn-sm bg-dark" style="color: white;" onclick="check_video_nuke('{{ (all_nukes.get(nuke)).get('id_nuke') }}')" value="check">Проверка</a>
+                        </th>
+                    </form>
+                </div>
+
+                <div class="col-2">
+                    <form method="post">
+                        <th>
+                            <input hidden ="text" name="name" value="delete_{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                                <input style="color: white; background-color: #cb121b;" class="btn btn-sm" type="submit" value="Удалить"></input>
+                        </th>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+                <form method="post" id="edit_nuke_{{ (all_nukes.get(nuke)).get('id_nuke') }}" class="display-none" style="padding-top: 10px;">
+                    <div class=" mb-3">
+                        <input hidden type="text" name="name" value="edit_____{{ (all_nukes.get(nuke)).get('id_nuke') }}">
+                        <input type="text" class="form-control input-nuke-form" name="nuke_name" value="{{ (all_nukes.get(nuke)).get('name') }}">
+                        <input type="text" class="form-control input-nuke-form" name="ip" value="{{ (all_nukes.get(nuke)).get('ip_nuke') }}">
+                        <input type="text" class="form-control input-nuke-form" name="comment" value="{{ (all_nukes.get(nuke)).get('comment') }}">
+                        <button class="btn btn-dark btn-video" type="submit">Сохранить</button>
+                    </div>
+                </form>
+{% endfor %}
+
+
+    <br>
+    <h1>Добавить нюк</h1>
+    <br>
+    <form method="post">
+        <input type="text" name="name"  id="name" placeholder="Имя" class="form-control"><br>
+        <textarea name="ip" placeholder="IP" class="form-control"></textarea><br>
+        <textarea name="comment" id="comment" placeholder="Комментарии" class="form-control"></textarea><br>
+        <input type="submit" class="btn btn-success" value="Отправить"><br>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}
+Stone Video
+{% endblock %}
+
+{% block content %}
+
+<div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+    <h1 class="display-4 fw-normal">Телевизоры</h1>
+  </div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 mb-3 text-center">
+{% if all_nukes == [] %}
+  Пусто
+{% else %}
+  {% for nuke in all_nukes %}
+    <div class="col">
+        <div class="card mb-4 shadow-sm" style="border-radius: 15px;">
+            <details class="header-nuke bg-dark" style="border-radius: 15px 15px 0 0;">
+                <summary>
+                        <div class="card-header py-3 text-bg-primary border-primary bg-dark"">
+                            <div class="d-flex justify-content-between" >
+                                {% if nuke.status_ping == "1" %}
+                                    <p>&#128994;</p>
+                                {% else %}
+                                    <p>&#128308;</p>
+                                {% endif %}
+                                <h4 class="my-0 fw-normal">{{ nuke.name }}</h4>
+                            </div>
+
+                          <p class="d-flex justify-content-end">{{ nuke.ip }}</p>
+
+                        </div>
+                </summary>
+                {% if nuke.comment == None %}
+                  <p>Описания нет</p>
+                {% else %}
+                  <p> {{ nuke.comment }} </p>
+                {% endif %}
+            </details>
+
+              <div style="display: flex;">
+                  <a onclick="send_play('{{ nuke.id }}')" class="col-6 btn-play">
+                      <form id="play_{{ nuke.id }}" method="POST">
+                        <input type="hidden" name="index" value="PlayVideo_{{ nuke.id }}">
+<!--                              <img src="{{ url_for('static', filename='images/play.png') }}" alt="">-->
+                              <p>Play</p>
+                      </form>
+                  </a>
+                  <a onclick="send_stop('{{ nuke.id }}')" class="col-6 btn-stop">
+                      <form id="stop_{{ nuke.id }}" method="POST">
+                        <input type="hidden" name="index" value="PauseVideo_{{ nuke.id }}">
+<!--                              <img src="{{ url_for('static', filename='images/stop.png') }}" alt="">-->
+                              <p>Stop</p>
+                      </form>
+                  </a>
+              </div>
+
+          <div id="block_button_player_form_{{ nuke.id }}" class="block-button">
+
+          </div>
+          <div class="display-none block-load" id="block_for_load_form_{{ nuke.id }}">
+            <h4>Обработка запроса, подождите!</h4>
+          </div>
+          <div id="div_form_{{ nuke.id }}">
+          <div class="card-body" id="nuke_form_{{ nuke.id }}">
+
+            <form method="POST" id="form_{{ nuke.id }}" class="video_form form-example" data-method="serializeArray">
+              {% for video in all_videos %}
+
+                {% if video in nuke.videos %}
+
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{ video[0] }}" name="check_box" id="{{ nuke.id }}_{{ video[0] }}" checked>
+                    <label class="form-check-label" for="{{ nuke.id }}_{{ video[0] }}">
+                      {{ video[1] }}
+                    </label>
+                  </div>
+
+                {% else %}
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="{{ video[0] }}" name="check_box" id="{{ nuke.id }}_{{ video[0] }}">
+                  <label class="form-check-label" for="{{ nuke.id }}_{{ video[0] }}" style="color: red;">
+                      {{ video[1] }}
+                  </label>
+                </div>
+
+                {% endif %}
+              {% endfor %}
+
+              <br>
+              <div class="form-example">
+                <input type="hidden" name="index" value="{{ nuke.id }}">
+                      <a class="w-100 btn btn-lg btn-dark btn-primary" onclick="send_form('form_{{ nuke.id }}')">Обновить</a>
+                <div id="msg">{{ test_dict }}</div>
+              </div>
+            </form>
+          </div>
+          </div>
+            <div id="block_feedback_status_form_{{ nuke.id }}"></div>
+        </div>
+      </div>
+  {% endfor %}
+{% endif %}
+  </div>
+{% endblock %}
